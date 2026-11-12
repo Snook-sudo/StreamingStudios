@@ -1,0 +1,14 @@
+{
+  "category": "Metadata",
+  "guid": "b7c1d3a2-5e4f-4a8b-9c6d-2f1e0a9b8c7d",
+  "name": "Streaming Studios",
+  "description": "Aggiunge la piattaforma streaming (Netflix, Prime Video, Disney+...) come Studio di film e serie TV, usando i dati TMDB.",
+  "overview": "Scansiona la libreria e aggiunge le piattaforme come Studios.",
+  "owner": "local",
+  "targetAbi": "12.0.0.0",
+  "timestamp": "2026-11-12T00:00:00Z",
+  "version": "1.0.0.0",
+  "status": "Active",
+  "autoUpdate": false,
+  "assemblies": ["Jellyfin.Plugin.StreamingStudios.dll"]
+}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="utf-8">
+    <title>Streaming Studios</title>
+</head>
+<body>
+<div id="StreamingStudiosConfigPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button,emby-checkbox">
+    <div data-role="content">
+        <div class="content-primary">
+            <form id="StreamingStudiosForm">
+                <div class="inputContainer">
+                    <label class="inputLabel inputLabelUnfocused" for="TmdbApiKey">Chiave API TMDB (v3) o Read Access Token (v4)</label>
+                    <input id="TmdbApiKey" name="TmdbApiKey" type="text" is="emby-input" />
+                    <div class="fieldDescription">Gratuita su themoviedb.org &rarr; Impostazioni &rarr; API.</div>
+                </div>
+                <div class="inputContainer">
+                    <label class="inputLabel inputLabelUnfocused" for="Country">Paese (codice ISO, es. IT, US, GB)</label>
+                    <input id="Country" name="Country" type="text" is="emby-input" maxlength="2" />
+                </div>
+                <label class="checkboxContainer"><input is="emby-checkbox" type="checkbox" id="ScanMovies" /><span>Analizza film</span></label>
+                <label class="checkboxContainer"><input is="emby-checkbox" type="checkbox" id="ScanSeries" /><span>Analizza serie TV</span></label>
+                <br />
+                <label class="checkboxContainer"><input is="emby-checkbox" type="checkbox" id="IncludeFlatrate" /><span>Abbonamento (Netflix, Prime Video, Disney+...)</span></label>
+                <label class="checkboxContainer"><input is="emby-checkbox" type="checkbox" id="IncludeFree" /><span>Gratuito</span></label>
+                <label class="checkboxContainer"><input is="emby-checkbox" type="checkbox" id="IncludeAds" /><span>Gratuito con pubblicit&agrave;</span></label>
+                <label class="checkboxContainer"><input is="emby-checkbox" type="checkbox" id="IncludeRent" /><span>Noleggio</span></label>
+                <label class="checkboxContainer"><input is="emby-checkbox" type="checkbox" id="IncludeBuy" /><span>Acquisto</span></label>
+                <div class="inputContainer">
+                    <label class="inputLabel inputLabelUnfocused" for="ExcludedProviders">Piattaforme da ignorare (separate da virgola)</label>
+                    <input id="ExcludedProviders" name="ExcludedProviders" type="text" is="emby-input" />
+                </div>
+                <div>
+                    <button is="emby-button" type="submit" class="raised button-submit block emby-button"><span>Salva</span></button>
+                </div>
+                <p class="fieldDescription">Poi vai in Dashboard &rarr; Attivit&agrave; pianificate &rarr; "Scansiona piattaforme streaming (Studios)" per avviare la scansione.</p>
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript">
+        (function () {
+            var pluginId = 'b7c1d3a2-5e4f-4a8b-9c6d-2f1e0a9b8c7d';
+            var page = document.querySelector('#StreamingStudiosConfigPage');
+            var checks = ['ScanMovies', 'ScanSeries', 'IncludeFlatrate', 'IncludeFree', 'IncludeAds', 'IncludeRent', 'IncludeBuy'];
+            var texts = ['TmdbApiKey', 'Country', 'ExcludedProviders'];
+
+            page.addEventListener('pageshow', function () {
+                Dashboard.showLoadingMsg();
+                ApiClient.getPluginConfiguration(pluginId).then(function (c) {
+                    texts.forEach(function (k) { page.querySelector('#' + k).value = c[k] || ''; });
+                    checks.forEach(function (k) { page.querySelector('#' + k).checked = !!c[k]; });
+                    Dashboard.hideLoadingMsg();
+                });
+            });
+
+            page.querySelector('#StreamingStudiosForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                Dashboard.showLoadingMsg();
+                ApiClient.getPluginConfiguration(pluginId).then(function (c) {
+                    texts.forEach(function (k) { c[k] = page.querySelector('#' + k).value.trim(); });
+                    checks.forEach(function (k) { c[k] = page.querySelector('#' + k).checked; });
+                    ApiClient.updatePluginConfiguration(pluginId, c).then(Dashboard.processPluginConfigurationUpdateResult);
+                });
+                return false;
+            });
+        })();
+    </script>
+</div>
+</body>
+</html>
