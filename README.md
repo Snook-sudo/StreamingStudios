@@ -1,0 +1,2 @@
+# StreamingStudios
+Jellyfin Streaming Studios
